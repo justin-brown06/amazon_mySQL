@@ -13,6 +13,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "inquirer": "^6.2.0",
+    "mysql": "^2.13.0"
+  },
   "bugs": {
     "url": "https://github.com/justin-brown06/amazon_mySQL/issues"
   },
