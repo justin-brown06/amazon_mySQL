@@ -72,19 +72,39 @@ function viewProducts() {
     });
 };
 
+let lowProd = [];
+
 function viewLow() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
+
         res.forEach(function (i) {
+
             if (i.stock_quantity < 5) {
-                console.log(chalk.gray("\n----------") + red("ALERT!") + chalk.gray("----------\n") + blue(i.product_name + " has low inventory.\nItem ID: " + i.item_id + "\nCurrent Inventory: " + i.stock_quantity));
-                console.log(line);
+                lowProd.push(
+                    {
+                        name: i.product_name,
+                        id: i.item_id,
+                        quantity: i.stock_quantity
+                    }
+                );
             };
         });
-        console.log(line);
-        console.log(green("Looks like all inventories not listed are doing good!"));
-        console.log(line);
+
+        if (lowProd.length < 1) {
+
+            console.log("\n" + line);
+            console.log(green("Looks like all inventories are doing good!"));
+            console.log(line);
+        } else {
+            lowProd.forEach(function (i) {
+
+                console.log(chalk.gray("\n----------") + red("ALERT!") + chalk.gray("----------\n") + blue(i.name + " has low inventory.")+green("\nItem ID: ") + blue(i.id) + green("\nCurrent Inventory: ") + blue(i.quantity));
+                console.log(line);
+            })
+        }
         initOption();
+
     });
 };
 
@@ -120,20 +140,6 @@ function productId() {
         });
 };
 
-// function grabHighestBid(productId) {
-//     connection.query("SELECT * FROM products WHERE item_id = ?", [productId], function (err, res) {
-//         if (err) throw err;
-
-//         res.forEach(function(i){
-//             console.log("-----------Product " + i.item_id + "------------")
-//             console.log("\nSong Name: " + red(JSON.stringify(i.song_name)));
-//             console.log("Release Year: " + red(JSON.stringify(i.year)));
-//             console.log("------------------------------")
-//         });
-//         initOption();
-//     });
-// };
-
 function addInventory(product) {
     inquirer
         .prompt([
@@ -160,6 +166,7 @@ function addInventory(product) {
                     function (err, res) {
                         if (err) throw err;
 
+                        lowProd.splice(0, lowProd.length);
                         console.log("\nCongratulations! You added to your invento!");
                         console.log("----------------------------------");
                         console.log("Your new quantity is: " + newQuantity);
@@ -170,7 +177,7 @@ function addInventory(product) {
             });
 
         });
-}
+};
 
 function newProducts() {
     // console.log("Inserting a new bid item...\n");

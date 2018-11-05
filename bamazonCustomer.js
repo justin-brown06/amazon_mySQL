@@ -20,6 +20,8 @@ let blue = chalk.blue;
 let green = chalk.green;
 let red = chalk.red;
 let productArr = [];
+let line = chalk.gray("----------------------------------");
+
 
 function appStart() {
     console.log(green("\n************WELCOME TO BAMAZON!***********\n"))
@@ -56,7 +58,7 @@ function viewProducts() {
         res.forEach(function (i) {
             console.log("\n--------- Item ID: " + red(i.item_id) + " ------------")
             console.log(green("Product: ") + blue(i.product_name) + green("\nPrice: $") + blue(i.price));
-
+            console.log(line);
         });
         initOption();
     });
@@ -124,6 +126,7 @@ function makePurchase(product) {
                 } else {
                     let newQuantity = res[0].stock_quantity - parseInt(resPurchase.userPurchase);
                     let total = (res[0].price * parseInt(resPurchase.userPurchase));
+ 
 
                     // console.log(newQuantity)
                     // console.log(total)
@@ -133,7 +136,7 @@ function makePurchase(product) {
                         "UPDATE products SET ? WHERE ?",
                         [
                             {
-                                stock_quantity: newQuantity
+                                stock_quantity: newQuantity, product_sales: total
                             },
                             {
                                 item_id: product
@@ -154,8 +157,8 @@ function makePurchase(product) {
             });
 
         });
-}
+};
 
 function exit() {
     connection.end()
-}
+};
